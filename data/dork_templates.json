@@ -1,0 +1,170 @@
+{
+  "google": [
+    {
+      "category": "Secrets",
+      "template": "site:{{DOMAIN}} intext:\"DB_PASSWORD\""
+    },
+    {
+      "category": "Secrets",
+      "template": "site:{{DOMAIN}} intext:\"AWS_SECRET_ACCESS_KEY\""
+    },
+    {
+      "category": "Secrets",
+      "template": "site:{{DOMAIN}} intext:\"private_key\" ext:env | ext:txt | ext:json"
+    },
+    {
+      "category": "Secrets",
+      "template": "site:{{DOMAIN}} intext:\"api_key\" OR intext:\"apikey\""
+    },
+    {
+      "category": "Secrets",
+      "template": "site:{{DOMAIN}} ext:env | ext:yml | ext:ini | ext:txt password"
+    },
+    {
+      "category": "Secrets",
+      "template": "site:{{DOMAIN}} ext:log | ext:conf intext:\"error\" | intext:\"fail\""
+    },
+    {
+      "category": "Admin Panels",
+      "template": "site:{{DOMAIN}} intitle:\"Admin Login\""
+    },
+    {
+      "category": "Admin Panels",
+      "template": "site:{{DOMAIN}} inurl:admin | inurl:cpanel | inurl:dashboard"
+    },
+    {
+      "category": "Admin Panels",
+      "template": "site:{{DOMAIN}} inurl:manage | inurl:auth | inurl:login"
+    },
+    {
+      "category": "Dev/Test",
+      "template": "site:{{DOMAIN}} inurl:staging | inurl:dev | inurl:test"
+    },
+    {
+      "category": "Dev/Test",
+      "template": "site:{{DOMAIN}} intitle:\"Development\" | intitle:\"Staging Environment\""
+    },
+    {
+      "category": "Dev/Test",
+      "template": "site:{{DOMAIN}} ext:bak | ext:old | ext:backup"
+    },
+    {
+      "category": "Index Pages",
+      "template": "site:{{DOMAIN}} intitle:\"index of /\""
+    },
+    {
+      "category": "Index Pages",
+      "template": "site:{{DOMAIN}} intitle:\"index of\" + backup | .git"
+    },
+    {
+      "category": "Files / Configs",
+      "template": "site:{{DOMAIN}} ext:sql | ext:db | ext:dump"
+    },
+    {
+      "category": "Files / Configs",
+      "template": "site:{{DOMAIN}} ext:cfg | ext:conf | ext:ini"
+    },
+    {
+      "category": "Files / Configs",
+      "template": "site:{{DOMAIN}} filetype:env"
+    },
+    {
+      "category": "Files / Configs",
+      "template": "site:{{DOMAIN}} filetype:xml inurl:config"
+    },
+    {
+      "category": "Other",
+      "template": "site:{{DOMAIN}} inurl:login ext:php | ext:asp | ext:jsp"
+    },
+    {
+      "category": "Other",
+      "template": "site:{{DOMAIN}} \"Index of /admin\""
+    }
+  ],
+  "github": [
+    {
+      "category": "Secrets",
+      "template": "org:{{ORG}} AWS_SECRET_ACCESS_KEY"
+    },
+    {
+      "category": "Secrets",
+      "template": "org:{{ORG}} DB_PASSWORD"
+    },
+    {
+      "category": "Secrets",
+      "template": "org:{{ORG}} firebaseCredentials"
+    },
+    {
+      "category": "Secrets",
+      "template": "org:{{ORG}} google_api_key"
+    },
+    {
+      "category": "Secrets",
+      "template": "org:{{ORG}} slack_token"
+    },
+    {
+      "category": "Secrets",
+      "template": "org:{{ORG}} ssh private key"
+    },
+    {
+      "category": "Secrets",
+      "template": "org:{{ORG}} password filename:.env"
+    },
+    {
+      "category": "Secrets",
+      "template": "org:{{ORG}} filename:id_rsa"
+    },
+    {
+      "category": "Admin Panels",
+      "template": "org:{{ORG}} admin_password"
+    },
+    {
+      "category": "Admin Panels",
+      "template": "org:{{ORG}} inurl:admin"
+    },
+    {
+      "category": "Dev/Test",
+      "template": "org:{{ORG}} filename:.env"
+    },
+    {
+      "category": "Dev/Test",
+      "template": "org:{{ORG}} filename:config.json"
+    },
+    {
+      "category": "Dev/Test",
+      "template": "org:{{ORG}} filename:docker-compose.yml"
+    },
+    {
+      "category": "Dev/Test",
+      "template": "org:{{ORG}} filename:settings.py"
+    },
+    {
+      "category": "Index Pages",
+      "template": "org:{{ORG}} intitle:\"index of\""
+    },
+    {
+      "category": "Files / Configs",
+      "template": "org:{{ORG}} filename:credentials.json"
+    },
+    {
+      "category": "Files / Configs",
+      "template": "org:{{ORG}} filename:.htpasswd"
+    },
+    {
+      "category": "Files / Configs",
+      "template": "org:{{ORG}} filename:backup.sql"
+    },
+    {
+      "category": "Files / Configs",
+      "template": "org:{{ORG}} extension:sql password"
+    },
+    {
+      "category": "Other",
+      "template": "org:{{ORG}} filename:secrets.yaml"
+    },
+    {
+      "category": "Other",
+      "template": "org:{{ORG}} filename:.npmrc _auth"
+    }
+  ]
+}

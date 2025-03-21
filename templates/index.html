@@ -1,0 +1,202 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="hero-section bg-primary bg-gradient text-white py-5 rounded-3 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold">DorkRecon</h1>
+                <p class="lead">Automated Google & GitHub Dorking Tool for Bug Bounty Reconnaissance</p>
+                <p>Uncover exposed secrets, admin panels, configuration files, and more with intelligent dorking.</p>
+            </div>
+            <div class="col-lg-4 d-none d-lg-block text-center">
+                <i class="fas fa-search fa-8x opacity-50"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 card-hover">
+            <div class="card-body text-center">
+                <i class="fas fa-search-dollar fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">Google Dorking</h3>
+                <p class="card-text">Find exposed credentials, admin panels, and sensitive files through advanced Google searches.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 card-hover">
+            <div class="card-body text-center">
+                <i class="fab fa-github fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">GitHub Dorking</h3>
+                <p class="card-text">Discover leaked API keys, passwords, and sensitive information in GitHub repositories.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 card-hover">
+            <div class="card-body text-center">
+                <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">Rate Limit Protection</h3>
+                <p class="card-text">Smart rate limiting and proxy rotation to avoid blocks and ensure reliable results.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Start a New Scan</h3>
+            </div>
+            <div class="card-body">
+                <form id="scan-form">
+                    <div class="mb-3">
+                        <label for="target" class="form-label">Target Domain or Organization</label>
+                        <input type="text" class="form-control" id="target" name="target" placeholder="example.com or organization-name" required>
+                        <div class="form-text">Enter a domain name (for Google) or an organization name (for GitHub)</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Platform</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="platform" id="platform-both" value="both" checked>
+                            <label class="form-check-label" for="platform-both">
+                                Both Google & GitHub
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="platform" id="platform-google" value="google">
+                            <label class="form-check-label" for="platform-google">
+                                Google Only
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="platform" id="platform-github" value="github">
+                            <label class="form-check-label" for="platform-github">
+                                GitHub Only
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Categories</label>
+                        <div id="categories-container">
+                            <div class="text-center">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Loading categories...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i> Start Scan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Scan Status Container (hidden by default) -->
+        <div id="scan-status-container" class="mt-4 d-none"></div>
+    </div>
+    
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h3 class="card-title mb-0">How It Works</h3>
+            </div>
+            <div class="card-body">
+                <ol class="list-group list-group-flush list-group-numbered">
+                    <li class="list-group-item d-flex">
+                        <div>
+                            <h5>Enter Your Target</h5>
+                            <p class="mb-0">Specify a domain name or GitHub organization to scan.</p>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <div>
+                            <h5>Select Platforms & Categories</h5>
+                            <p class="mb-0">Choose between Google, GitHub, or both, and select the vulnerability categories.</p>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <div>
+                            <h5>Review Results</h5>
+                            <p class="mb-0">Get organized results categorized by type and source.</p>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <div>
+                            <h5>Export & Report</h5>
+                            <p class="mb-0">Export findings to CSV or JSON for further analysis or reporting.</p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h3 class="card-title mb-0">Categories</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-danger me-2">
+                                <i class="fas fa-key"></i>
+                            </span>
+                            <span>Secrets</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-warning text-dark me-2">
+                                <i class="fas fa-user-shield"></i>
+                            </span>
+                            <span>Admin Panels</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-primary me-2">
+                                <i class="fas fa-code"></i>
+                            </span>
+                            <span>Dev/Test</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-success me-2">
+                                <i class="fas fa-folder-open"></i>
+                            </span>
+                            <span>Index Pages</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-info text-dark me-2">
+                                <i class="fas fa-file-alt"></i>
+                            </span>
+                            <span>Files / Configs</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-secondary me-2">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </span>
+                            <span>Other</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

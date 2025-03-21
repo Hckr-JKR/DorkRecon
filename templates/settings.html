@@ -1,0 +1,347 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Settings</h1>
+    <a href="/" class="btn btn-primary">
+        <i class="fas fa-arrow-left me-2"></i> Back to Home
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">GitHub Tokens</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Add GitHub tokens to increase API rate limits and access private repositories.
+                    <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">
+                        Learn how to create a token <i class="fas fa-external-link-alt ms-1"></i>
+                    </a>
+                </p>
+                
+                <div id="github-tokens-container">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="github-tokens-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Owner</th>
+                                    <th>Rate Limit</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for token in tokens %}
+                                <tr>
+                                    <td>{{ token.id }}</td>
+                                    <td>{{ token.owner }}</td>
+                                    <td>{{ token.rate_limit_remaining }} / 5000</td>
+                                    <td>
+                                        {% if token.is_active %}
+                                        <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                        <span class="badge bg-danger">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-danger delete-token" data-token-id="{{ token.id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No tokens added yet</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <form id="add-token-form" class="mt-3">
+                        <div class="mb-3">
+                            <label for="token" class="form-label">GitHub Token</label>
+                            <input type="text" class="form-control" id="token" name="token" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="token-owner" class="form-label">Token Owner (optional)</label>
+                            <input type="text" class="form-control" id="token-owner" name="token-owner">
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i> Add Token
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Proxy Settings</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Add proxy servers to rotate IP addresses and avoid rate limiting or blocking.
+                </p>
+                
+                <div id="proxies-container">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="proxies-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Address</th>
+                                    <th>Port</th>
+                                    <th>Protocol</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for proxy in proxies %}
+                                <tr>
+                                    <td>{{ proxy.id }}</td>
+                                    <td>{{ proxy.address }}</td>
+                                    <td>{{ proxy.port }}</td>
+                                    <td>{{ proxy.protocol }}</td>
+                                    <td>
+                                        {% if proxy.is_active %}
+                                        <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                        <span class="badge bg-danger">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-danger delete-proxy" data-proxy-id="{{ proxy.id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No proxies added yet</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <form id="add-proxy-form" class="mt-3">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="proxy-address" class="form-label">Proxy Address</label>
+                                <input type="text" class="form-control" id="proxy-address" name="proxy-address" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="proxy-port" class="form-label">Port</label>
+                                <input type="number" class="form-control" id="proxy-port" name="proxy-port" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="proxy-protocol" class="form-label">Protocol</label>
+                                <select class="form-select" id="proxy-protocol" name="proxy-protocol">
+                                    <option value="http">HTTP</option>
+                                    <option value="https">HTTPS</option>
+                                    <option value="socks5">SOCKS5</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="proxy-username" class="form-label">Username (optional)</label>
+                                <input type="text" class="form-control" id="proxy-username" name="proxy-username">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="proxy-password" class="form-label">Password (optional)</label>
+                                <input type="password" class="form-control" id="proxy-password" name="proxy-password">
+                            </div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i> Add Proxy
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h3 class="card-title mb-0">Application Settings</h3>
+            </div>
+            <div class="card-body">
+                <form id="app-settings-form">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="google-max-retries" class="form-label">Google Max Retries</label>
+                            <input type="number" class="form-control" id="google-max-retries" name="google-max-retries" value="3">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="github-max-retries" class="form-label">GitHub Max Retries</label>
+                            <input type="number" class="form-control" id="github-max-retries" name="github-max-retries" value="3">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="google-retry-delay" class="form-label">Google Retry Delay (seconds)</label>
+                            <input type="number" class="form-control" id="google-retry-delay" name="google-retry-delay" value="30">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="github-retry-delay" class="form-label">GitHub Retry Delay (seconds)</label>
+                            <input type="number" class="form-control" id="github-retry-delay" name="github-retry-delay" value="60">
+                        </div>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="use-proxies">
+                        <label class="form-check-label" for="use-proxies">Enable Proxy Rotation</label>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i> Save Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize token form submission
+    document.getElementById('add-token-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const token = document.getElementById('token').value;
+        const owner = document.getElementById('token-owner').value || 'Unknown';
+        
+        fetch('/api/tokens', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ token, owner })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert('Token added successfully!');
+                location.reload();
+            } else if (data.error) {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Error adding token: ' + error);
+        });
+    });
+    
+    // Initialize proxy form submission
+    document.getElementById('add-proxy-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const address = document.getElementById('proxy-address').value;
+        const port = document.getElementById('proxy-port').value;
+        const protocol = document.getElementById('proxy-protocol').value;
+        const username = document.getElementById('proxy-username').value;
+        const password = document.getElementById('proxy-password').value;
+        
+        fetch('/api/proxies', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ address, port, protocol, username, password })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert('Proxy added successfully!');
+                location.reload();
+            } else if (data.error) {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Error adding proxy: ' + error);
+        });
+    });
+    
+    // Initialize app settings form submission
+    document.getElementById('app-settings-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Settings saved successfully!');
+    });
+    
+    // Initialize delete token buttons
+    document.querySelectorAll('.delete-token').forEach(button => {
+        button.addEventListener('click', function() {
+            const tokenId = this.getAttribute('data-token-id');
+            if (confirm('Are you sure you want to delete this token?')) {
+                fetch('/api/tokens', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: tokenId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert('Token deleted successfully!');
+                        location.reload();
+                    } else if (data.error) {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    alert('Error deleting token: ' + error);
+                });
+            }
+        });
+    });
+    
+    // Initialize delete proxy buttons
+    document.querySelectorAll('.delete-proxy').forEach(button => {
+        button.addEventListener('click', function() {
+            const proxyId = this.getAttribute('data-proxy-id');
+            if (confirm('Are you sure you want to delete this proxy?')) {
+                fetch('/api/proxies', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: proxyId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert('Proxy deleted successfully!');
+                        location.reload();
+                    } else if (data.error) {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    alert('Error deleting proxy: ' + error);
+                });
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
