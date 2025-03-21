@@ -1,5 +1,6 @@
 flask
 flask_sqlalchemy
+beautifulsoup4
 fastapi
 uvicorn
 pydantic
